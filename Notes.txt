@@ -1,3 +1,0 @@
-Want a bash script that works on .txt files (originally would prefer converting back and forth between .odt files, but that's not trivial in the command line), and want to be able to specify the minimum number of duplicate lines to keep (anything below that is tossed). Should save the output in another file so the original is still available.
-
-Make a python project, then set up ssh into her computer, then 
