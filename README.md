@@ -1,6 +1,7 @@
-Script to take an input file containing some number of repeated lines, and create a sorted output file containing
-each line once, with the number of times each line added, removing all entries that appear less than a given
-minimum of times.
+Script to take an input file containing some number of repeated lines, and create 
+a sorted output file containing each line once, with the number of times each line 
+appeared added, removing all lines that appeared less than a given minimum of times.
+Ignores lines matching a provided pattern.
 
 Sample Input:
 
@@ -25,3 +26,6 @@ Sample Output, minimum # required is 4:
 
 Input is read from an "Input.txt" file in the top-level directory.
 Output is written to an "Output.txt" file in the top-level directory.
+
+Ignored lines are of the form:
+> Lastname, Firstname *
