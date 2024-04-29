@@ -1,25 +1,26 @@
+import re
 from os.path import exists
 
 
-def add_title_to_output(output_lines, title_count, title_count_minimum, title):
-    # TODO: delete authors, their lines will be of the form "Marillier, Juliet *"
-    # You'd look for a single word, comma space, some text, space, *
-    # Use a regex for this
-    if title_count >= title_count_minimum:
+def add_line_to_output(output_lines, title_count, title_count_minimum, title, ignore_line_pattern):
+    ignore_line_pattern = re.compile(ignore_line_pattern)
+    if title_count >= title_count_minimum and not ignore_line_pattern.match(title):
         output_lines.append("{:03d}".format(title_count) + " - " + title)
 
 
 def get_input_lines(input_file_name):
     if not exists(input_file_name):
         print("Input file named \"" + input_file_name + "\" does not exist")
-        return
+        exit()
 
     input_file = open(input_file_name, 'r')
     input_lines = input_file.readlines()
 
     if not input_lines:
         print("Input file named \"" + input_file_name + "\" is empty")
+        exit()
 
+    input_lines.sort()
     return input_lines
 
 
@@ -32,7 +33,7 @@ def write_output_lines(output_file_name, output_lines):
     output_file.close()
 
 
-def process_input_lines(input_lines, minimum_line_count):
+def process_input_lines(input_lines, minimum_repetition_count, ignore_line_pattern):
     # Set up the output file, create if necessary, overwrite with a fresh output buffer otherwise
     output_lines = []
 
@@ -45,18 +46,19 @@ def process_input_lines(input_lines, minimum_line_count):
         if current_line == last_line:
             current_title_count += 1
         else:
-            add_title_to_output(output_lines, current_title_count, minimum_line_count, last_line)
+            add_line_to_output(output_lines, current_title_count, minimum_repetition_count,
+                               last_line, ignore_line_pattern)
             last_line = current_line
             current_title_count = 1
 
-    add_title_to_output(output_lines, current_title_count, minimum_line_count, last_line)
+    add_line_to_output(output_lines, current_title_count, minimum_repetition_count, last_line)
 
     return output_lines
 
 
-def process(minimum_line_count, input_file_name, output_file_name):
+def process(minimum_repetition_count, input_file_name, output_file_name, ignore_line_pattern):
     input_lines = get_input_lines(input_file_name)
 
-    output_lines = process_input_lines(input_lines, minimum_line_count)
+    output_lines = process_input_lines(input_lines, minimum_repetition_count, ignore_line_pattern)
 
     write_output_lines(output_file_name, output_lines)
