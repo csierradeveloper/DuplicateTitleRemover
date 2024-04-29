@@ -2,10 +2,12 @@ import re
 from os.path import exists
 
 
-def add_line_to_output(output_lines, title_count, title_count_minimum, title, ignore_line_pattern):
-    ignore_line_pattern = re.compile(ignore_line_pattern)
-    if title_count >= title_count_minimum and not ignore_line_pattern.match(title):
-        output_lines.append("{:03d}".format(title_count) + " - " + title)
+def process(minimum_repetition_count, input_file_name, output_file_name, ignore_line_pattern):
+    input_lines = get_input_lines(input_file_name)
+
+    output_lines = process_input_lines(input_lines, minimum_repetition_count, ignore_line_pattern)
+
+    write_output_lines(output_file_name, output_lines)
 
 
 def get_input_lines(input_file_name):
@@ -24,24 +26,15 @@ def get_input_lines(input_file_name):
     return input_lines
 
 
-def write_output_lines(output_file_name, output_lines):
-    output_lines.sort()
-    output_lines.reverse()
-
-    output_file = open(output_file_name, 'w')
-    output_file.writelines(output_lines)
-    output_file.close()
-
-
 def process_input_lines(input_lines, minimum_repetition_count, ignore_line_pattern):
     # Set up the output file, create if necessary, overwrite with a fresh output buffer otherwise
     output_lines = []
 
     # Get the contents of the first line, and set currentTitleCount to 1
-    last_line = input_lines[0]
-    current_title_count = 1
+    last_line = None
+    current_title_count = 0
 
-    for i in range(1, len(input_lines)):
+    for i in range(len(input_lines)):
         current_line = input_lines[i]
         if current_line == last_line:
             current_title_count += 1
@@ -56,9 +49,16 @@ def process_input_lines(input_lines, minimum_repetition_count, ignore_line_patte
     return output_lines
 
 
-def process(minimum_repetition_count, input_file_name, output_file_name, ignore_line_pattern):
-    input_lines = get_input_lines(input_file_name)
+def add_line_to_output(output_lines, title_count, title_count_minimum, title, ignore_line_pattern):
+    ignore_line_pattern = re.compile(ignore_line_pattern)
+    if title_count >= title_count_minimum and not ignore_line_pattern.match(title):
+        output_lines.append("{:03d}".format(title_count) + " - " + title)
 
-    output_lines = process_input_lines(input_lines, minimum_repetition_count, ignore_line_pattern)
 
-    write_output_lines(output_file_name, output_lines)
+def write_output_lines(output_file_name, output_lines):
+    output_lines.sort()
+    output_lines.reverse()
+
+    output_file = open(output_file_name, 'w')
+    output_file.writelines(output_lines)
+    output_file.close()
