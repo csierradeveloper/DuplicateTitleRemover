@@ -51,7 +51,7 @@ def process_input_lines(input_lines, minimum_repetition_count, ignore_line_patte
             last_line = current_line
             current_title_count = 1
 
-    add_line_to_output(output_lines, current_title_count, minimum_repetition_count, last_line)
+    add_line_to_output(output_lines, current_title_count, minimum_repetition_count, last_line, ignore_line_pattern)
 
     return output_lines
 
